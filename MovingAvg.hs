@@ -1,4 +1,7 @@
--- take some input, clean it, cast to appropriate type
+-- take some input, clean it, transform to appropriate type
+-- read parses strings and produces values
+-- which we then take and transform to the value type
+-- that makes sense in this context
 clean raw = map (\s -> read s :: Double) (lines raw)
 
 -- a (alpha) is a user-defined constant
@@ -14,4 +17,14 @@ avg [] = 0.0
 -- fromIntegral converts from any Int to Num
 -- necessary as the sum function gives us a Num type
 -- Sum: monoid under addition
-let mean xs = sum xs / (fromIntegral (length xs))
+mean xs = (sum xs) / (fromIntegral (length xs))
+
+avgError :: [Double] -> Double
+avgError xs = mean xs - avg xs
+
+main = do
+  streamData <- readFile "input.txt"
+  let input = clean streamData
+  putStrLn $ "the mean is: " ++ (show. mean) input
+  putStrLn $ "the moving average is: " ++ (show. avg) input
+  putStrLn $ "the error is: " ++ (show . avgError) input
